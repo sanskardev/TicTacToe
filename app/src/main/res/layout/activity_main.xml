@@ -94,8 +94,7 @@
         android:layout_height="80dp"
         android:gravity="center"
         android:textSize="24sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="16dp"
         android:background="@drawable/tile_bg"
         app:layout_constraintTop_toBottomOf="@id/tile_00"
         app:layout_constraintEnd_toStartOf="@id/tile_11"/>
@@ -106,7 +105,7 @@
         android:gravity="center"
         android:textSize="24sp"
         android:layout_height="80dp"
-        android:layout_marginTop="16dp"
+        android:layout_margin="16dp"
         android:background="@drawable/tile_bg"
         app:layout_constraintTop_toBottomOf="@id/tile_01"
         app:layout_constraintStart_toEndOf="@id/guideline_left"
@@ -129,8 +128,7 @@
         android:gravity="center"
         android:textSize="24sp"
         android:background="@drawable/tile_bg"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="16dp"
         app:layout_constraintTop_toBottomOf="@id/tile_10"
         app:layout_constraintEnd_toStartOf="@id/tile_21"
         />
@@ -141,9 +139,7 @@
         android:layout_height="80dp"
         android:gravity="center"
         android:textSize="24sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="16dp"
         android:background="@drawable/tile_bg"
         app:layout_constraintEnd_toStartOf="@id/guideline_right"
         app:layout_constraintStart_toEndOf="@id/guideline_left"
@@ -155,10 +151,20 @@
         android:gravity="center"
         android:textSize="24sp"
         android:background="@drawable/tile_bg"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_margin="16dp"
         app:layout_constraintTop_toBottomOf="@id/tile_12"
         app:layout_constraintStart_toEndOf="@id/tile_21"
+        />
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="reset"
+        app:layout_constraintStart_toStartOf="@id/tile_00"
+        app:layout_constraintEnd_toEndOf="@id/tile_22"
+        app:layout_constraintTop_toBottomOf="@id/tile_22"
+        android:layout_marginTop="20dp"
         />
 
 
