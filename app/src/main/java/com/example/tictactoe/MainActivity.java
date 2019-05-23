@@ -2,20 +2,23 @@ package com.example.tictactoe;
 
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import static com.example.tictactoe.R.id.main_layout;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -32,39 +35,60 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        final ConstraintLayout main_layout = findViewById(R.id.main_layout);
         final String[] current = {"X"};
         final boolean[][] flag = new boolean[3][3];
         final Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        final int[] moves = {0};
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.result, main_layout, false);
+        view.setLayoutParams(new ConstraintLayout.LayoutParams(100, 100));
+        final TextView[] result = {findViewById(R.id.winner)};
+
+
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 final int finalI = i;
                 final int finalJ = j;
-                final int finalI1 = i;
-                final int finalJ1 = j;
                 tiles[i][j].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (flag[finalI][finalJ]) {
                             if (Build.VERSION.SDK_INT >= 26) {
-                                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                             } else {
-                                vibrator.vibrate(200);
+                                vibrator.vibrate(100);
                             }
                         } else {
+                            moves[0]++;
                             tiles[finalI][finalJ].setText(current[0]);
-                            flag[finalI1][finalJ1] = true;
+                            flag[finalI][finalJ] = true;
                             if (current[0].equals("X"))
                                 current[0] = "O";
                             else
                                 current[0] = "X";
+                            if (moves[0] == 9) {
+                                result[0].setText("Draw!");
+                                main_layout.addView(view);
+                            }
+                            else if (moves[0] > 5) {
+                                int k = 0;
+                                while (tiles[k][finalJ].equals(tiles[finalI][finalJ])) {
+                                    if (2 == k) {
+                                        result[0].setText(tiles[finalI][finalJ] + "Wins!");
+                                        main_layout.addView(view);
+                                    }
+                                    k++;
+                                }
+                            }
                         }
                     }
                 });
             }
         }
 
-        Button reset = findViewById(R.id.reset);
+        Button reset = (Button) findViewById(R.id.reset);
 
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int j = 0; j < 3; j++) {
                         tiles[i][j].setText("");
                         flag[i][j] = false;
+                        moves[0] = 0;
                     }
                 }
             }
