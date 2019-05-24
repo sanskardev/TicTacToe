@@ -1,6 +1,8 @@
 package com.example.tictactoe;
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -134,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (9 == Integer.parseInt(no_of_moves.getText().toString())) {
 
-            no_of_moves.setText("asdasd");
-
             result_dialog.setContentView(R.layout.result);
 
             TextView winner = result_dialog.findViewById(R.id.winner);
             winner.setText(getString(R.string.draw));
+
+            result_dialog.show();
 
             Button play_again = result_dialog.findViewById(R.id.play_again);
             play_again.setOnClickListener(new View.OnClickListener() {
