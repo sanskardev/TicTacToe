@@ -3,6 +3,7 @@ package com.example.tictactoe;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -17,12 +18,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    TextView no_of_moves;
+    int no_of_moves;
     char current;
     boolean[][] flag;
     TextView[][] tiles;
+    TextView turn;
     Dialog result_dialog;
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -30,17 +31,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        result_dialog = new Dialog(this);
 
-        no_of_moves = findViewById(R.id.moves);
+        result_dialog = new Dialog(this);
+        result_dialog.setCancelable(false);
+        result_dialog.setCanceledOnTouchOutside(false);
         current = 'X';
         flag = new boolean[3][3];
         tiles = new TextView[3][3];
+        turn = findViewById(R.id.turn);
+
+
+        result_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
 
         setTilesInArray();
+        no_of_moves = 0;
+        turn.setText(R.string.x_turn);
 
 
-        no_of_moves.setText(String.valueOf(0));
 
 
         for (int i = 0; i < 3; i++) {
@@ -58,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
                             setSymbolToTile(finalI, finalJ);
 
-                            if (Integer.parseInt(no_of_moves.getText().toString()) >= 5) {
-                                checkHorizontal();
-                                checkVertical();
-                                checkDiagonal();
+                            if (no_of_moves >= 5) {
+                                checkHorizontal(finalI);
+                                checkVertical(finalJ);
+                                checkDiagonal(finalI, finalJ);
                                 checkDraw();
                             }
+
+                            changeCurrent();
 
                         }
                     }
@@ -111,46 +121,136 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSymbolToTile(int i , int  j) {
 
-        int moves = Integer.parseInt(no_of_moves.getText().toString());
-        no_of_moves.setText(String.valueOf(moves + 1));
+        no_of_moves++;
+        if ('X' == current) {
+            tiles[i][j].setTextColor(Color.RED);
+        } else {
+            tiles[i][j].setTextColor(Color.BLUE);
+        }
         tiles[i][j].setText(String.valueOf(current));
         flag[i][j] = true;
-        current = ('X' == current) ? 'O' : 'X';
+
+    }
+
+    public void changeCurrent() {
+
+        if ('X' == current) {
+            current = 'O';
+            turn.setText(R.string.o_turn);
+        } else {
+            current = 'X';
+            turn.setText(R.string.x_turn);
+        }
 
     }
 
 
-    public void checkHorizontal() {
+    public void checkHorizontal(int row) {
+
+        int yes = 0;
+
+        for (int i = 0 ; (i < 3) && (tiles[row][i].getText().equals(String.valueOf(current))) ; i++) {
+            yes++;
+        }
+        if (yes == 3) {
+
+            //If winning move is 9th, then checkDraw() will change result TextView to "It\'s a draw!". This is why no_of_moves is changed to 10.
+            no_of_moves = 10;
+            if (current == 'X') {
+
+                deploy_result("X wins!");
+
+            } else {
+
+                deploy_result("O wins!");
+
+            }
+        }
+    }
+
+    public void checkVertical(int column) {
+
+        int yes = 0;
+
+        for (int i = 0 ; (i < 3) && (tiles[i][column].getText().equals(String.valueOf(current))) ; i++) {
+            yes++;
+        }
+        if (yes == 3) {
+
+            //If winning move is 9th, then checkDraw() will change result TextView to "It\'s a draw!". This is why no_of_moves is changed to 10.
+            no_of_moves = 10;
+            if (current == 'X') {
+
+                deploy_result("X wins!");
+
+            } else {
+
+                deploy_result("O wins!");
+
+            }
+        }
 
     }
 
-    public void checkVertical() {
+    public void checkDiagonal(int I, int J) {
 
-    }
+        if (I == J) {
 
-    public void checkDiagonal() {
+            int yes = 0;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (i == j && tiles[i][j].getText().equals(String.valueOf(current))) {
+                        yes++;
+                    }
+                }
+            }
+
+            if (3 == yes) {
+
+                //If winning move is 9th, then checkDraw() will change result TextView to "It\'s a draw!". This is why no_of_moves is changed to 10.
+                no_of_moves = 10;
+
+                if ('X' == current) {
+                    deploy_result("X wins!");
+                } else {
+                    deploy_result("O wins!");
+                }
+            }
+
+        }
+
+        if (2 == I + J) {
+
+            int yes = 0;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (2 == i + j && tiles[i][j].getText().equals(String.valueOf(current))) {
+                        yes++;
+                    }
+                }
+            }
+
+            if (3 == yes) {
+
+                //If winning move is 9th, then checkDraw() will change result TextView to "It\'s a draw!". This is why no_of_moves is changed to 10.
+                no_of_moves = 10;
+
+                if ('X' == current) {
+                    deploy_result("X wins!");
+                } else {
+                    deploy_result("O wins!");
+                }
+            }
+
+        }
 
     }
 
     public void checkDraw() {
 
-        if (9 == Integer.parseInt(no_of_moves.getText().toString())) {
+        if (9 == no_of_moves) {
 
-            result_dialog.setContentView(R.layout.result);
-
-            TextView winner = result_dialog.findViewById(R.id.winner);
-            winner.setText(getString(R.string.draw));
-
-            result_dialog.show();
-
-            Button play_again = result_dialog.findViewById(R.id.play_again);
-            play_again.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    reset_tiles();
-                    result_dialog.dismiss();
-                }
-            });
+            deploy_result("It\'s a draw!");
 
         }
 
@@ -163,11 +263,35 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < 3; j++) {
                 tiles[i][j].setText("");
                 flag[i][j] = false;
-                no_of_moves.setText(String.valueOf(0));
+                no_of_moves = 0;
             }
+        }
+        if ('O' == current) {
+            changeCurrent();
         }
 
     }
+
+    public void deploy_result(String result_winner) {
+
+        result_dialog.setContentView(R.layout.result);
+
+        TextView winner = result_dialog.findViewById(R.id.winner);
+        winner.setText(result_winner);
+
+        result_dialog.show();
+
+        Button play_again = result_dialog.findViewById(R.id.play_again);
+        play_again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reset_tiles();
+                result_dialog.dismiss();
+            }
+        });
+
+    }
+
 
 
 }

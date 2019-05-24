@@ -5,15 +5,14 @@
     android:layout_width="300dp"
     android:layout_height="300dp"
     android:layout_gravity="center"
-    android:background="#90000000">
+    android:background="@drawable/popup_bg">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/winner"
-        android:text=""
-        android:textColor="#ffffff"
-        android:padding="15dp"
+        android:text="sadasd"
+        android:textColor="#173f5f"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,6 +24,9 @@
         android:id="@+id/play_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg"
+        android:padding="20sp"
+        android:textColor="#173f5f"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/winner"

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">TicTacToe</string>
-    <string name="draw">It\'s a draw!</string>
-    <string name="number_of_moves">Number of Moves</string>
+    <string name="x_turn">X\'s Turn</string>
+    <string name="o_turn">O\'s Turn</string>
 </resources>
