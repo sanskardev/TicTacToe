@@ -1,5 +1,6 @@
 package com.example.tictactoe;
 
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -12,20 +13,29 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
+    TextView no_of_moves;
+    char current;
+    boolean[][] flag;
+    TextView[][] tiles;
+    Dialog result_dialog;
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        result_dialog = new Dialog(this);
 
+        no_of_moves = findViewById(R.id.moves);
+        current = 'X';
+        flag = new boolean[3][3];
+        tiles = new TextView[3][3];
 
-        final char[] current = {'X'};
-        final boolean[][] flag = new boolean[3][3];
-        final TextView no_of_moves = findViewById(R.id.moves);
-        final TextView[][] tiles = new TextView[3][3];
-
-        setTilesinArray(tiles);
+        setTilesInArray();
 
 
         no_of_moves.setText(String.valueOf(0));
@@ -39,9 +49,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (flag[finalI][finalJ]) {
+
                             vibrate();
+
                         } else {
-                            setSymbolToTile(no_of_moves, tiles, finalI, finalJ, current[0], flag);
+
+                            setSymbolToTile(finalI, finalJ);
+
+                            if (Integer.parseInt(no_of_moves.getText().toString()) >= 5) {
+                                checkHorizontal();
+                                checkVertical();
+                                checkDiagonal();
+                                checkDraw();
+                            }
+
                         }
                     }
                 });
@@ -53,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reset_tiles(tiles, flag, no_of_moves);
+                reset_tiles();
             }
         });
 
     }
 
 
-    public void setTilesinArray(TextView[][] tiles) {
+    public void setTilesInArray() {
 
         int temp;
         String[][] tile_names= new String[][]{{"tile_00", "tile_01", "tile_02"}, {"tile_10", "tile_11", "tile_12"}, {"tile_20", "tile_21", "tile_22"}};
@@ -86,18 +107,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setSymbolToTile(TextView no_of_moves, TextView[][] tiles, int i , int  j, char current, boolean[][] flag) {
+    public void setSymbolToTile(int i , int  j) {
 
         int moves = Integer.parseInt(no_of_moves.getText().toString());
         no_of_moves.setText(String.valueOf(moves + 1));
-        tiles[i][j].setText(current);
+        tiles[i][j].setText(String.valueOf(current));
         flag[i][j] = true;
         current = ('X' == current) ? 'O' : 'X';
 
     }
 
 
-    public void reset_tiles(TextView[][] tiles, boolean[][] flag, TextView no_of_moves) {
+    public void checkHorizontal() {
+
+    }
+
+    public void checkVertical() {
+
+    }
+
+    public void checkDiagonal() {
+
+    }
+
+    public void checkDraw() {
+
+        if (9 == Integer.parseInt(no_of_moves.getText().toString())) {
+
+            no_of_moves.setText("asdasd");
+
+            result_dialog.setContentView(R.layout.result);
+
+            TextView winner = result_dialog.findViewById(R.id.winner);
+            winner.setText(getString(R.string.draw));
+
+            Button play_again = result_dialog.findViewById(R.id.play_again);
+            play_again.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reset_tiles();
+                    result_dialog.dismiss();
+                }
+            });
+
+        }
+
+    }
+
+
+    public void reset_tiles() {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
